@@ -63,6 +63,32 @@ app
     });
   });
 
+app
+  .route("/articles/:articleTitle")
+  .get((req, res) => {
+    Article.findOne({ title: req.params.articleTitle }, (err, foundArticle) => {
+      if (foundArticle) {
+        res.send(foundArticle);
+      } else {
+        res.send("sorry article does not exist");
+      }
+    });
+  })
+  .put((req, res) => {
+    Article.update(
+      { title: req.params.articleTitle },
+      { title: req.body.title, content: req.body.content },
+      { overwrite: true },
+      err => {
+        if (!err) {
+          res.send("Article succesfully updated");
+        } else {
+          res.send(err);
+        }
+      }
+    );
+  });
+
 app.listen(3000, () => {
   console.log("server running on port 3000");
 });
